@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body, #root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+  
+  h1, h2, h3, .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Custom glowing coin effect */
+@keyframes coin-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.25), inset 0 0 15px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(245, 158, 11, 0.5), inset 0 0 25px rgba(245, 158, 11, 0.35);
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(45deg);
+  }
+}
+
+.animate-coin-float {
+  animation: coin-float 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 215, 0, 0.15) 50%,
+    transparent 80%
+  );
+  transform: rotate(30deg);
+  animation: shimmer-sweep 5s infinite;
+  pointer-events: none;
+}
+
+/* Dragon Fire Animations */
+@keyframes dragon-fire-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.6)) drop-shadow(0 0 35px rgba(239, 68, 68, 0.4));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(251, 146, 60, 0.9)) drop-shadow(0 0 60px rgba(220, 38, 38, 0.7));
+    transform: scale(1.03);
+  }
+}
+
+@keyframes flame-flicker-1 {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1) translateY(0) rotate(0deg);
+    opacity: 0.85;
+  }
+  25% {
+    transform: scaleY(1.15) scaleX(0.95) translateY(-4px) rotate(-2deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleY(0.9) scaleX(1.05) translateY(2px) rotate(1deg);
+    opacity: 0.8;
+  }
+  75% {
+    transform: scaleY(1.2) scaleX(0.9) translateY(-6px) rotate(2deg);
+    opacity: 0.95;
+  }
+}
+
+@keyframes flame-flicker-2 {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1) translateY(0) rotate(0deg);
+    opacity: 0.75;
+  }
+  30% {
+    transform: scaleY(1.25) scaleX(0.85) translateY(-6px) rotate(3deg);
+    opacity: 0.95;
+  }
+  70% {
+    transform: scaleY(0.95) scaleX(1.05) translateY(3px) rotate(-2deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes dragon-ember-rise {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-90px) translateX(var(--ember-x, 20px)) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes dragon-blast {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.3;
+    filter: brightness(1.2);
+  }
+  35% {
+    transform: scale(1.2);
+    opacity: 1;
+    filter: brightness(2) saturate(1.5);
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.animate-dragon-fire {
+  animation: dragon-fire-pulse 2.2s infinite ease-in-out;
+}
+
+.animate-flame-1 {
+  animation: flame-flicker-1 1.6s infinite ease-in-out;
+  transform-origin: bottom center;
+}
+
+.animate-flame-2 {
+  animation: flame-flicker-2 2.1s infinite ease-in-out;
+  transform-origin: bottom center;
+}
+
+.animate-dragon-blast {
+  animation: dragon-blast 0.8s ease-out forwards;
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}
+

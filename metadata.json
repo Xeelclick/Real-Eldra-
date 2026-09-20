@@ -1,0 +1,6 @@
+{
+  "name": "Eldra Coin",
+  "description": "Eldra Coin token portal featuring daily dragon flame claims, referral rewards, educational quizzes on Solana, 24-hour batch withdrawal requests, admin bulk approvals, multi-account clone detection, and anti-cheat enforcement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

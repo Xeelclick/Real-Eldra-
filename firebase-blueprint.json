@@ -1,0 +1,30 @@
+{
+  "entities": {
+    "User": {
+      "collection": "users",
+      "fields": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "username": { "type": "string" },
+        "displayName": { "type": "string" },
+        "balance": { "type": "number" },
+        "streak": { "type": "number" },
+        "role": { "type": "string" },
+        "referralCode": { "type": "string" },
+        "referredBy": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "Transaction": {
+      "collection": "transactions",
+      "fields": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string" }
+      }
+    }
+  }
+}
