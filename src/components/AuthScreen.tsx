@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { store } from '../services/store';
 import { emailOtpService } from '../services/otpService';
-import { auth, googleProvider } from '../firebase';
-import { signInWithPopup } from 'firebase/auth';
+import { auth } from '../firebase';
 import { BlockedScreen } from './BlockedScreen';
 import { ELDRA_COIN_IMAGE } from '../assets/eldra_coin';
 import {
@@ -148,70 +147,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
       if (checkBlocked.blocked) {
         setBlockedState(checkBlocked);
       }
-    }
-  };
-
-  // ==========================================
-  // GOOGLE SIGN IN / SIGN UP (GMAIL)
-  // ==========================================
-  const handleGoogleSignIn = async () => {
-    setErrorMsg(null);
-    setSuccessMsg(null);
-    setIsSubmitting(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const googleUser = result.user;
-      const userEmail = googleUser.email;
-      const displayName = googleUser.displayName || userEmail?.split('@')[0] || 'Google User';
-
-      if (!userEmail) {
-        setIsSubmitting(false);
-        setErrorMsg('Google account did not return a valid email address.');
-        return;
-      }
-
-      let existingUser = store.getAllUsers().find(u => u.email.toLowerCase() === userEmail.toLowerCase());
-      if (!existingUser) {
-        const regRes = store.register(userEmail, displayName, 'GoogleAuthSecuredPass123!', referralCode.trim() || undefined, false);
-        existingUser = regRes.user || store.getAllUsers().find(u => u.email.toLowerCase() === userEmail.toLowerCase());
-      }
-
-      if (existingUser) {
-        store.login(existingUser.email, existingUser.password || 'GoogleAuthSecuredPass123!');
-        const isAdmin = existingUser.role === 'admin' || userEmail.toLowerCase() === 'xeelclick@gmail.com';
-        setSuccessMsg('Successfully signed in with Gmail! Welcome.');
-        setTimeout(() => {
-          onSuccess(isAdmin);
-        }, 400);
-      } else {
-        setIsSubmitting(false);
-        setErrorMsg('Failed to authenticate Google user in Eldra database.');
-      }
-    } catch (err: any) {
-      console.error('Google sign-in error:', err);
-      if (err.code === 'auth/unauthorized-domain' || err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
-        const fallbackEmail = prompt('Enter your Gmail address for Google Sign-In:', 'xeelclick@gmail.com');
-        if (fallbackEmail && fallbackEmail.includes('@')) {
-          const userEmail = fallbackEmail.trim().toLowerCase();
-          const displayName = userEmail.split('@')[0];
-          let existingUser = store.getAllUsers().find(u => u.email.toLowerCase() === userEmail);
-          if (!existingUser) {
-            const regRes = store.register(userEmail, displayName, 'GoogleAuthSecuredPass123!', referralCode.trim() || undefined, false);
-            existingUser = regRes.user || store.getAllUsers().find(u => u.email.toLowerCase() === userEmail);
-          }
-          if (existingUser) {
-            store.login(existingUser.email, existingUser.password || 'GoogleAuthSecuredPass123!');
-            const isAdmin = existingUser.role === 'admin' || userEmail === 'xeelclick@gmail.com';
-            setSuccessMsg('Successfully signed in with Gmail! Welcome.');
-            setTimeout(() => {
-              onSuccess(isAdmin);
-            }, 400);
-            return;
-          }
-        }
-      }
-      setIsSubmitting(false);
-      setErrorMsg(err.message || 'Google Sign-In failed. Please try again or use email/password.');
     }
   };
 
@@ -418,40 +353,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           {/* View: Standard Form (Sign In / Sign Up Columns) */}
           {view === 'form' && (
             <>
-              {/* Google / Gmail Instant Sign In / Sign Up */}
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={isSubmitting}
-                className="w-full mb-5 py-3.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-zinc-100 text-xs font-bold flex items-center justify-center gap-3 transition-all hover:border-amber-500/40 shadow-md cursor-pointer disabled:opacity-50"
-              >
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                  <path
-                    fill="#4285F4"
-                    d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.19v3.15C3.17 21.36 7.25 24 12 24z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.19C.43 8.1 0 9.99 0 12s.43 3.9 1.19 5.42l4.09-3.15z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.25 0 3.17 2.64 1.19 6.58l4.09 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
-                  />
-                </svg>
-                <span>Continue with Google (Gmail)</span>
-              </button>
-
-              <div className="relative flex py-1 items-center mb-5">
-                <div className="flex-grow border-t border-zinc-800"></div>
-                <span className="flex-shrink mx-4 text-[10px] uppercase font-bold text-zinc-500 tracking-wider">or with email & password</span>
-                <div className="flex-grow border-t border-zinc-800"></div>
-              </div>
-
               {/* Clean Segmented Tab Switcher: Sign In | Sign Up */}
               <div className="grid grid-cols-2 p-1 bg-[#181a20] rounded-xl border border-zinc-800/80 mb-6">
                 <button
